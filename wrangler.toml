@@ -1,4 +1,4 @@
-name = "discorde-cloudflare-bot"
+name = "discord-bot-cloudflare"
 main = "./src/server.js"
 compatibility_date="2023-05-18"
 

@@ -1,5 +1,5 @@
 {
-  "name": "discorde-cloudflare-bot",
+  "name": "discord-cloudflare-bot",
   "version": "1.0.0",
   "description": "A discord bot that uses cloudflare",
   "type": "module",
