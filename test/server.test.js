@@ -81,6 +81,7 @@ describe('Server', () => {
       });
 
       const result = sinon
+        // eslint-disable-next-line no-undef
         .stub(global, 'fetch')
         .withArgs(env.DEPLOY_HOOK_URL)
         .resolves({
