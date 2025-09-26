@@ -34,6 +34,7 @@ describe('Server', () => {
 
     afterEach(() => {
       verifyDiscordRequestStub.restore();
+      sinon.restore(); // This will restore all stubs created with sinon.stub
     });
 
     it('should handle a PING interaction', async () => {
@@ -72,7 +73,9 @@ describe('Server', () => {
       };
 
       const env = {
-        DEPLOY_HOOK_URL: 'https://httpbin.org/post',
+        CONFIG_KV: {
+          get: sinon.fake.resolves('https://httpbin.org/post'),
+        },
       };
 
       verifyDiscordRequestStub.resolves({
@@ -80,21 +83,13 @@ describe('Server', () => {
         interaction: interaction,
       });
 
-      const result = sinon
+      const fetchStub = sinon
         // eslint-disable-next-line no-undef
         .stub(global, 'fetch')
-        .withArgs(env.DEPLOY_HOOK_URL)
+        .withArgs('https://httpbin.org/post')
         .resolves({
           status: 200,
           ok: true,
-          json: sinon.fake.resolves({
-            result: {
-              id: '123456789',
-            },
-            success: true,
-            errors: [],
-            messages: [],
-          }),
         });
 
       const response = await server.fetch(request, env);
@@ -102,7 +97,7 @@ describe('Server', () => {
       expect(body.type).to.equal(
         InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
       );
-      expect(result.calledOnce);
+      expect(fetchStub.calledOnce).to.be.true;
     });
 
     it('should handle an invite command interaction', async () => {

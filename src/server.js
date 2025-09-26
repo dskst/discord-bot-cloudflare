@@ -8,7 +8,11 @@ import {
   InteractionType,
   verifyKey,
 } from 'discord-interactions';
-import { DEPLOY4PAGE_COMMAND, INVITE_COMMAND } from './commands.js';
+import {
+  DEPLOY4PAGE_COMMAND,
+  INVITE_COMMAND,
+  SET_DEPLOY_HOOK_COMMAND,
+} from './commands.js';
 import { deploy } from './cloudflare/pages.js';
 import { InteractionResponseFlags } from 'discord-interactions';
 
@@ -59,7 +63,18 @@ router.post('/', async (request, env) => {
     // Most user commands will come as `APPLICATION_COMMAND`.
     switch (interaction.data.name.toLowerCase()) {
       case DEPLOY4PAGE_COMMAND.name.toLowerCase(): {
-        const response = await deploy(env.DEPLOY_HOOK_URL);
+        const deployHookUrl = await env.CONFIG_KV.get('DEPLOY_HOOK_URL');
+        if (!deployHookUrl) {
+          return new JsonResponse({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+              content:
+                'Deploy hook URL not set. Use /set-deploy-hook command first.',
+              flags: InteractionResponseFlags.EPHEMERAL,
+            },
+          });
+        }
+        const response = await deploy(deployHookUrl);
         return new JsonResponse({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
@@ -74,6 +89,26 @@ router.post('/', async (request, env) => {
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content: INVITE_URL,
+            flags: InteractionResponseFlags.EPHEMERAL,
+          },
+        });
+      }
+      case SET_DEPLOY_HOOK_COMMAND.name.toLowerCase(): {
+        const url = interaction.data.options?.[0]?.value;
+        if (!url) {
+          return new JsonResponse({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+              content: 'URL parameter is required.',
+              flags: InteractionResponseFlags.EPHEMERAL,
+            },
+          });
+        }
+        await env.CONFIG_KV.put('DEPLOY_HOOK_URL', url);
+        return new JsonResponse({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: `Deploy hook URL set to: ${url}`,
             flags: InteractionResponseFlags.EPHEMERAL,
           },
         });

@@ -1,4 +1,8 @@
-import { DEPLOY4PAGE_COMMAND, INVITE_COMMAND } from './commands.js';
+import {
+  DEPLOY4PAGE_COMMAND,
+  INVITE_COMMAND,
+  SET_DEPLOY_HOOK_COMMAND,
+} from './commands.js';
 import dotenv from 'dotenv';
 import process from 'node:process';
 
@@ -34,7 +38,11 @@ const response = await fetch(url, {
     Authorization: `Bot ${token}`,
   },
   method: 'PUT',
-  body: JSON.stringify([DEPLOY4PAGE_COMMAND, INVITE_COMMAND]),
+  body: JSON.stringify([
+    DEPLOY4PAGE_COMMAND,
+    INVITE_COMMAND,
+    SET_DEPLOY_HOOK_COMMAND,
+  ]),
 });
 
 if (response.ok) {
