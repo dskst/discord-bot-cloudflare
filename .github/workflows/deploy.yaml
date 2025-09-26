@@ -28,9 +28,7 @@ jobs:
         with:
           node-version: 24
       - run: npm ci
-      - run: npm run publish
+      - run: npx wrangler deploy --kv CONFIG_KV:${{ secrets.CONFIG_KV_NAMESPACE_ID }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CONFIG_KV_NAMESPACE_ID: ${{ secrets.CONFIG_KV_NAMESPACE_ID }}
-          CONFIG_KV_NAMESPACE_PREVIEW_ID: ${{ secrets.CONFIG_KV_NAMESPACE_PREVIEW_ID }}
