@@ -2,6 +2,27 @@
  * The core server that runs on a Cloudflare worker.
  */
 
+// Polyfill Response for Node.js test environment
+if (typeof Response === 'undefined') {
+  // eslint-disable-next-line no-undef
+  global.Response = class Response {
+    constructor(body, init) {
+      this.body = body;
+      this.status = init?.status || 200;
+      this.headers = new Map(Object.entries(init?.headers || {}));
+      this.ok = this.status >= 200 && this.status < 300;
+    }
+
+    async text() {
+      return this.body;
+    }
+
+    async json() {
+      return JSON.parse(this.body);
+    }
+  };
+}
+
 import { AutoRouter } from 'itty-router';
 import {
   InteractionResponseType,
