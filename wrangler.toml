@@ -4,8 +4,8 @@ compatibility_date="2023-05-18"
 
 [[kv_namespaces]]
 binding = "CONFIG_KV"
-id = "config_kv_namespace"
-preview_id = "config_kv_namespace_preview"
+id = "${CONFIG_KV_NAMESPACE_ID}"
+preview_id = "${CONFIG_KV_NAMESPACE_PREVIEW_ID}"
 
 # [secrets]
 # DISCORD_TOKEN
