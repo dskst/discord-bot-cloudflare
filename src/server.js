@@ -92,7 +92,9 @@ router.post('/', async (request, env) => {
     // Most user commands will come as `APPLICATION_COMMAND`.
     switch (interaction.data.name.toLowerCase()) {
       case DEPLOY4PAGE_COMMAND.name.toLowerCase(): {
-        const deployHookUrl = await env.CONFIG_KV.get(`DEPLOY_HOOK_URL_${interaction.guild_id}`);
+        const deployHookUrl = await env.CONFIG_KV.get(
+          `DEPLOY_HOOK_URL_${interaction.guild_id}`,
+        );
         if (!deployHookUrl) {
           return new JsonResponse({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
