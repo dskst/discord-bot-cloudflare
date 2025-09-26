@@ -2,7 +2,7 @@
  * The core server that runs on a Cloudflare worker.
  */
 
-// Polyfill Response for Node.js test environment
+// Polyfill Web APIs for Node.js test environment
 if (typeof Response === 'undefined') {
   // eslint-disable-next-line no-undef
   global.Response = class Response {
@@ -20,6 +20,14 @@ if (typeof Response === 'undefined') {
     async json() {
       return JSON.parse(this.body);
     }
+  };
+}
+
+if (typeof fetch === 'undefined') {
+  // eslint-disable-next-line no-undef
+  global.fetch = async function (/* _url, _options */) {
+    // Basic mock implementation for testing
+    return new Response('{}', { status: 200 });
   };
 }
 
