@@ -2,11 +2,9 @@ name = "discord-bot-cloudflare"
 main = "./src/server.js"
 compatibility_date="2023-05-18"
 
-# [[kv_namespaces]]
-# binding = "CONFIG_KV"
-# id = "KV_NAMESPACE_ID_PLACEHOLDER"
-# preview_id = "KV_NAMESPACE_PREVIEW_ID_PLACEHOLDER"
-# Note: KV namespaces will be configured via wrangler deploy command with --kv flag
+[[kv_namespaces]]
+binding = "CONFIG_KV"
+id = "{KV_NAMESPACE_ID_PLACEHOLDER}"
 
 # [secrets]
 # DISCORD_TOKEN
